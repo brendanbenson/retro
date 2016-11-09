@@ -1,0 +1,28 @@
+.column-set {
+  display: block;
+
+  @media(min-width: $desktop-break) {
+    display: flex;
+  }
+
+  .column {
+    flex: 1;
+    padding: $spacing;
+
+    &.happy {
+      background-color: $happy;
+      color: $text-inverted;
+    }
+
+    &.meh {
+      background-color: $meh;
+      color: $text-inverted;
+    }
+
+    &.sad {
+      background-color: $sad;
+      color: $text-inverted;
+    }
+
+  }
+}

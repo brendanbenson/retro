@@ -1,0 +1,9 @@
+input {
+  @include standard-font;
+  width: 100%;
+  box-sizing: border-box;
+  border: none;
+  border-radius: 5px;
+  padding: $spacing / 2;
+  background: rgba(white, 0.9);
+}
