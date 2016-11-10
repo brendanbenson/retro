@@ -1,5 +1,6 @@
 module Main exposing (..)
 
+import Config exposing (Config)
 import Html exposing (Html, div, text)
 import Html.App
 import Messages exposing (Msg)
@@ -13,10 +14,12 @@ import View exposing (view)
 import WebSocket exposing (connectWebSocket)
 
 
-init : Result String Route -> ( Model, Cmd Msg )
-init routeResult =
+init : Config -> Result String Route -> ( Model, Cmd Msg )
+init config routeResult =
     urlUpdate routeResult
         { route = Routing.routeFromResult routeResult
+        , host = config.host
+        , serverUrl = config.serverUrl
         , messages = []
         , channel = ""
         , formChannel = ""
@@ -32,17 +35,24 @@ urlUpdate result model =
     case Routing.routeFromResult result of
         RoomRoute retroId ->
             { model | route = (Routing.routeFromResult result) }
-                ! [ fetchRetroItems retroId
+                ! [ fetchRetroItems model.serverUrl retroId
                   , connectWebSocket retroId
                   ]
+
+        CreateRoomRoute ->
+            { model
+                | route = (Routing.routeFromResult result)
+                , formChannel = ""
+            }
+                ! []
 
         _ ->
             { model | route = (Routing.routeFromResult result) } ! []
 
 
-main : Program Never
+main : Program Config
 main =
-    Navigation.program Routing.parser
+    Navigation.programWithFlags Routing.parser
         { init = init
         , view = view
         , update = update

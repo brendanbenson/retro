@@ -5,6 +5,8 @@ import Routing exposing (Route)
 
 type alias Model =
     { route : Route
+    , host : String
+    , serverUrl : String
     , messages : List AddRetroResponse
     , happyMessage : String
     , mehMessage : String

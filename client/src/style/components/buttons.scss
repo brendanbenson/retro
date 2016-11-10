@@ -1,0 +1,37 @@
+$base-button-color: $sad;
+
+.ui-button, a.ui-button {
+  @include standard-font;
+  display: inline-block;
+  border-radius: 2px;
+  box-shadow: 0 1px 0 0 rgba(0, 0, 0, .16);
+  cursor: pointer;
+  font-size: $base-font-size;
+  padding: 8px 12px;
+  line-height: $base-line-height;
+  text-decoration: none;
+  position: relative;
+  text-align: center;
+  outline: none;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, .2);
+  border: none;
+  color: #fff
+}
+
+.ui-button:hover, a.ui-button:hover {
+  background: darken($base-button-color, 10);
+}
+
+.ui-button, .ui-button.active, .ui-button.disabled, .ui-button:disabled, a.ui-button, a.ui-button.active, a.ui-button.disabled, a.ui-button:disabled {
+  background: $base-button-color;
+}
+
+.ui-button.disabled, .ui-button:disabled, a.ui-button.disabled, a.ui-button:disabled {
+  cursor: default;
+  background-color: lighten($base-button-color, 10);
+}
+
+.ui-button:hover:active, a.ui-button:hover:active {
+  -webkit-transform: scale(.95);
+  transform: scale(.95)
+}

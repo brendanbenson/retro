@@ -1,0 +1,19 @@
+.retro-item {
+  padding: $spacing/4 0;
+
+  .retro-item-text {
+    cursor: pointer;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, .2);
+    line-height: $base-line-height;
+
+    &:hover {
+      background-color: rgba(white, .2);
+    }
+
+    &.done {
+      text-decoration: line-through;
+      color: transparentize($text-inverted, 0.5);
+      text-shadow: none;
+    }
+  }
+}

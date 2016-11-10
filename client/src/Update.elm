@@ -25,25 +25,40 @@ update msg model =
             ( { model | happyMessage = newMessage }, Cmd.none )
 
         SendHappyMessage ->
-            { model | happyMessage = "" }
-                ! [ addRetroItem { from = "Bob", text = model.happyMessage, sentiment = "Happy" }
-                  ]
+            case model.happyMessage of
+                "" ->
+                    model ! []
+
+                _ ->
+                    { model | happyMessage = "" }
+                        ! [ addRetroItem { from = "Bob", text = model.happyMessage, sentiment = "Happy" }
+                          ]
 
         UpdateMehMessage newMessage ->
             ( { model | mehMessage = newMessage }, Cmd.none )
 
         SendMehMessage ->
-            { model | mehMessage = "" }
-                ! [ addRetroItem { from = "Bob", text = model.mehMessage, sentiment = "Meh" }
-                  ]
+            case model.happyMessage of
+                "" ->
+                    model ! []
+
+                _ ->
+                    { model | mehMessage = "" }
+                        ! [ addRetroItem { from = "Bob", text = model.mehMessage, sentiment = "Meh" }
+                          ]
 
         UpdateSadMessage newMessage ->
             ( { model | sadMessage = newMessage }, Cmd.none )
 
         SendSadMessage ->
-            { model | sadMessage = "" }
-                ! [ addRetroItem { from = "Bob", text = model.sadMessage, sentiment = "Sad" }
-                  ]
+            case model.happyMessage of
+                "" ->
+                    model ! []
+
+                _ ->
+                    { model | sadMessage = "" }
+                        ! [ addRetroItem { from = "Bob", text = model.sadMessage, sentiment = "Sad" }
+                          ]
 
         ReceiveMessage messagesList ->
             { model | messages = messagesList } ! []

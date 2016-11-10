@@ -8,21 +8,28 @@
   .column {
     flex: 1;
     padding: $spacing;
+    border-radius: 5px;
+    box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.16);
+
+    @media(min-width: $desktop-break) {
+      height: 90vh;
+      overflow-y: auto;
+      margin: $spacing / 2;
+    }
 
     &.happy {
-      background-color: $happy;
+      background-color: transparentize($happy, .1);
       color: $text-inverted;
     }
 
     &.meh {
-      background-color: $meh;
+      background-color: transparentize($meh, .1);
       color: $text-inverted;
     }
 
     &.sad {
-      background-color: $sad;
+      background-color: transparentize($sad, .1);
       color: $text-inverted;
     }
-
   }
 }

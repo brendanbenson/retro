@@ -1,0 +1,9 @@
+.retro-page {
+  background: url('../images/hero.jpg') no-repeat 50% 50%/cover padding-box border-box;
+  background-size: auto, cover;
+  height: 100vh;
+
+  h1 {
+    text-shadow: rgba(0,0,0,.6) 0 1px 4px;
+  }
+}

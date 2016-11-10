@@ -1,0 +1,47 @@
+section.url-wrapper {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  text-align: center;
+
+  form.url-bar {
+    margin: 0 auto;
+    width: 400px;
+    min-width: 400px;
+    padding: 5px 5px 5px .8em;
+    cursor: text;
+    background: #fff;
+    height: 43px;
+    border-radius: 3px;
+    box-shadow: rgba(0, 0, 0, .4) 0 0 8px;
+
+    input {
+      @include standard-font;
+      border: none;
+      width: 195px;
+    }
+
+    input:focus {
+      outline: none;
+    }
+
+    label {
+      margin-right: .2em;
+      color: #9b9b9b;
+      line-height: 40px
+    }
+
+    input::-webkit-input-placeholder {
+      color: $sad;
+    }
+
+    input::-moz-placeholder {
+      color: $sad;
+      opacity: 1
+    }
+
+    input:-ms-input-placeholder {
+      color: $sad;
+    }
+  }
+}

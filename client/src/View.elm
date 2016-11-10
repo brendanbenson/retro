@@ -1,7 +1,7 @@
 module View exposing (view)
 
-import Html exposing (Html, button, div, form, input, label, span, text)
-import Html.Attributes exposing (checked, class, disabled, placeholder, type', value)
+import Html exposing (Html, a, button, div, form, h1, input, label, section, span, text)
+import Html.Attributes exposing (autocomplete, autofocus, checked, class, disabled, for, id, placeholder, type', value)
 import Html.Events exposing (onCheck, onClick, onInput, onSubmit)
 import Messages exposing (Msg(..))
 import Model exposing (Model, AddRetroResponse)
@@ -10,68 +10,100 @@ import Routing exposing (Route(..))
 
 view : Model -> Html Msg
 view model =
-    case model.route of
-        CreateRoomRoute ->
-            div []
-                [ input [ type' "text", value model.formChannel, onInput UpdateChannel, placeholder "Channel" ] []
-                , button [ type' "button", onClick (SetChannel model.formChannel) ] [ text "Join" ]
-                ]
+    let
+        content =
+            case model.route of
+                CreateRoomRoute ->
+                    div [ class "frontpage" ]
+                        [ div [ class "frontpage-header" ]
+                            [ section [ class "url-wrapper" ]
+                                [ h1 [ class "inverted" ] [ text "Create a retro and invite anyone" ]
+                                , form [ class "url-bar", onSubmit (SetChannel model.formChannel) ]
+                                    [ label
+                                        [ for "room-name"
+                                        , class "inverted"
+                                        ]
+                                        [ text (model.host ++ "/") ]
+                                    , input
+                                        [ type' "text"
+                                        , value model.formChannel
+                                        , onInput UpdateChannel
+                                        , id "room-name"
+                                        , placeholder "inspirational-panda"
+                                        , autocomplete False
+                                        , autofocus True
+                                        ]
+                                        []
+                                    , button
+                                        [ type' "submit"
+                                        , class "ui-button"
+                                        ]
+                                        [ text "Start" ]
+                                    ]
+                                ]
+                            ]
+                        ]
 
-        RoomRoute roomId ->
-            div []
-                [ div [ class "column-set" ]
-                    [ div [ class "column happy" ]
-                        (retroPanel
-                            "I'm happy that..."
-                            model.happyMessage
-                            (retroItemsForSentiment "Happy" model)
-                            UpdateHappyMessage
-                            SendHappyMessage
-                        )
-                    , div [ class "column meh" ]
-                        (retroPanel
-                            "I'm confused that..."
-                            model.mehMessage
-                            (retroItemsForSentiment "Meh" model)
-                            UpdateMehMessage
-                            SendMehMessage
-                        )
-                    , div [ class "column sad" ]
-                        (retroPanel
-                            "I wish that..."
-                            model.sadMessage
-                            (retroItemsForSentiment "Sad" model)
-                            UpdateSadMessage
-                            SendSadMessage
-                        )
-                    ]
-                , label [] [ input [ type' "checkbox", checked model.hideDone, onCheck SetHideDone ] [], text "Hide done items" ]
-                ]
+                RoomRoute roomId ->
+                    div [ class "retro-page" ]
+                        [ div [ class "column-set" ]
+                            [ div [ class "column happy" ]
+                                (retroPanel
+                                    "I'm happy about..."
+                                    model.happyMessage
+                                    (retroItemsForSentiment "Happy" model)
+                                    UpdateHappyMessage
+                                    SendHappyMessage
+                                )
+                            , div [ class "column meh" ]
+                                (retroPanel
+                                    "I'm confused about..."
+                                    model.mehMessage
+                                    (retroItemsForSentiment "Meh" model)
+                                    UpdateMehMessage
+                                    SendMehMessage
+                                )
+                            , div [ class "column sad" ]
+                                (retroPanel
+                                    "I'm sad about..."
+                                    model.sadMessage
+                                    (retroItemsForSentiment "Sad" model)
+                                    UpdateSadMessage
+                                    SendSadMessage
+                                )
+                            ]
+                        , label [] [ input [ type' "checkbox", checked model.hideDone, onCheck SetHideDone ] [], text "Hide done items" ]
+                        ]
 
-        NotFoundRoute ->
-            div [] [ text "Not found" ]
+                NotFoundRoute ->
+                    div [] [ text "Not found" ]
+    in
+        div [] [ content ]
 
 
 retroItem : AddRetroResponse -> Html Msg
 retroItem item =
     let
-        itemClass =
+        textClass =
             if item.finishedAt == Nothing then
-                "message"
+                "retro-item-text"
             else
-                "message striked"
+                "retro-item-text done"
+
+        itemMsg =
+            case item.finishedAt of
+                Nothing ->
+                    FinishRetroItem item.id
+
+                Just timestamp ->
+                    UnfinishRetroItem item.id
     in
-        div [ class itemClass ] [ text item.message, retroItemControls item ]
-
-
-retroItemControls : AddRetroResponse -> Html Msg
-retroItemControls item =
-    case item.finishedAt of
-        Nothing ->
-            button [ type' "button", onClick (FinishRetroItem item.id) ] [ text "Done" ]
-
-        Just timestamp ->
-            button [ type' "button", onClick (UnfinishRetroItem item.id) ] [ text "Undone" ]
+        div
+            [ class "retro-item"
+            , onClick itemMsg
+            ]
+            [ span [ class textClass ] [ text item.message ]
+            ]
 
 
 retroPanel :
@@ -81,11 +113,17 @@ retroPanel :
     -> (String -> Msg)
     -> Msg
     -> List (Html Msg)
-retroPanel placeholderText val retroItems onInputMsg onClickMsg =
+retroPanel placeholderText val retroItems onInputMsg onSubmitMsg =
     (List.concat
-        [ [ form [ onSubmit onClickMsg ]
-                [ input [ type' "text", value val, onInput onInputMsg, placeholder placeholderText ] []
-                , button [ type' "submit", disabled (val == "") ] [ text "Add" ]
+        [ [ form [ onSubmit onSubmitMsg ]
+                [ input
+                    [ type' "text"
+                    , value val
+                    , onInput onInputMsg
+                    , placeholder placeholderText
+                    , class "ui-input"
+                    ]
+                    []
                 ]
           ]
         , List.map retroItem retroItems

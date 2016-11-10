@@ -7,15 +7,15 @@ import Json.Decode as Decode exposing ((:=))
 import Model exposing (AddRetroResponse, RetroId)
 
 
-fetchRetroItems : RetroId -> Cmd Msg
-fetchRetroItems retroId =
-    Http.get collectionDecoder (fetchAllUrl retroId)
+fetchRetroItems : String -> RetroId -> Cmd Msg
+fetchRetroItems serverUrl retroId =
+    Http.get collectionDecoder (fetchAllUrl serverUrl retroId)
         |> Task.perform FetchRetroFail FetchRetroDone
 
 
-fetchAllUrl : RetroId -> String
-fetchAllUrl retroId =
-    "http://localhost:8080/api/retros/" ++ retroId
+fetchAllUrl : String -> RetroId -> String
+fetchAllUrl serverUrl retroId =
+    serverUrl ++ "/api/retros/" ++ retroId
 
 
 collectionDecoder : Decode.Decoder (List AddRetroResponse)
